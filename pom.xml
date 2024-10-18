@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-    <groupId>io.github.jinahya</groupId>
-    <artifactId>jinahya-parent</artifactId>
-    <version>0.9.6</version>
-  </parent>
-
-  <artifactId>kftc-financial-institution-info</artifactId>
+  <groupId>io.github.onacit</groupId>
+  <artifactId>bouncycastle-examples</artifactId>
   <version>0.2.0.20240931-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>${project.artifactId}</name>
-  <description>Financial institution information provided by KFTC</description>
-  <url>https://github.com/jinahya/$project.artifactId}</url>
+  <description>Examples with Bouncy Castle</description>
+  <url>https://github.com/onacit/$project.artifactId}</url>
   <inceptionYear>2024</inceptionYear>
   <organization>
     <name>Jinahya, Inc.</name>
@@ -60,7 +56,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>${maven.compiler.source}</maven.compiler.target>
     <maven.compiler.release>${maven.compiler.target}</maven.compiler.release>
     <maven.compiler.testSource>21</maven.compiler.testSource>
@@ -69,7 +65,8 @@
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     <sonar.organization>jinahya-github</sonar.organization>
     <sonar.projectKey>jinahya_kftc-financial-institution-info</sonar.projectKey>
-    <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
+    <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco.xml
+    </sonar.coverage.jacoco.xmlReportPaths>
     <!-- https://search.maven.org/search?q=g:com.google.protobuf -->
     <!--    <version.com.google.protobuf>4.27.3</version.com.google.protobuf>-->
     <version.com.google.protobuf>4.28.2</version.com.google.protobuf>
@@ -80,6 +77,7 @@
     <!-- https://search.maven.org/search?q=g:org.apache.pdfbox -->
     <!--    <version.org.apache.poi>5.2.5</version.org.apache.poi>-->
     <version.org.apache.poi>5.3.0</version.org.apache.poi>
+    <version.org.bouncycastle>1.78.1</version.org.bouncycastle>
     <!-- https://search.maven.org/search?q=g:org.hibernate.orm -->
     <!-- https://central.sonatype.com/artifact/org.hibernate.orm/hibernate-platform -->
     <version.org.hibernate.orm>7.0.0.Beta1</version.org.hibernate.orm>
@@ -491,7 +489,8 @@
         <activeByDefault>false</activeByDefault>
       </activation>
       <properties>
-        <kftc-financial-institution-info.sqlite3.path>${project.basedir}/db/kftc-financial-institution-info.sqlite3</kftc-financial-institution-info.sqlite3.path>
+        <kftc-financial-institution-info.sqlite3.path>${project.basedir}/db/kftc-financial-institution-info.sqlite3
+        </kftc-financial-institution-info.sqlite3.path>
       </properties>
       <dependencies>
         <dependency>
@@ -723,6 +722,45 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+    <profile>
+      <!-- https://www.bouncycastle.org/download/bouncy-castle-java/ -->
+      <id>java</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <!-- https://central.sonatype.com/artifact/org.bouncycastle/bcprov-jdk18on -->
+        <version.org.bouncycastle>1.78.1</version.org.bouncycastle>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>org.bouncycastle</groupId>
+          <artifactId>bcprov-jdk18on</artifactId>
+          <version>${version.org.bouncycastle}</version>
+          <scope>provided</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <!-- https://www.bouncycastle.org/download/bouncy-castle-java-fips/ -->
+      <id>java-fips</id>
+    </profile>
+    <profile>
+      <!-- https://www.bouncycastle.org/download/bouncy-castle-java-lts/ -->
+      <id>java-lts</id>
+      <properties>
+        <!-- https://central.sonatype.com/artifact/org.bouncycastle/bcprov-lts8on -->
+        <version.org.bouncycastle>2.73.6</version.org.bouncycastle>
+      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>org.bouncycastle</groupId>
+          <artifactId>bcprov-lts8on</artifactId>
+          <version>2.73.6</version>
+          <scope>provided</scope>
+        </dependency>
+      </dependencies>
     </profile>
   </profiles>
 </project>
