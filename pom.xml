@@ -101,7 +101,6 @@
       <version>5.5.13.4</version>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>nl.jqno.equalsverifier</groupId>
       <artifactId>equalsverifier-nodep</artifactId>
