@@ -62,57 +62,17 @@
     <maven.compiler.testSource>21</maven.compiler.testSource>
     <maven.compiler.testTarget>${maven.compiler.testSource}</maven.compiler.testTarget>
     <maven.compiler.testRelease>${maven.compiler.testTarget}</maven.compiler.testRelease>
-    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-    <sonar.organization>jinahya-github</sonar.organization>
-    <sonar.projectKey>jinahya_kftc-financial-institution-info</sonar.projectKey>
-    <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco.xml
-    </sonar.coverage.jacoco.xmlReportPaths>
-    <!-- https://search.maven.org/search?q=g:com.google.protobuf -->
-    <!--    <version.com.google.protobuf>4.27.3</version.com.google.protobuf>-->
-    <version.com.google.protobuf>4.28.2</version.com.google.protobuf>
     <version.lombok>1.18.34</version.lombok>
     <version.maven-failsafe>${version.maven-surefire}</version.maven-failsafe>
-    <!--    <version.maven-surefire>3.4.0</version.maven-surefire>-->
-    <version.maven-surefire>3.5.0</version.maven-surefire>
-    <!-- https://search.maven.org/search?q=g:org.apache.pdfbox -->
-    <!--    <version.org.apache.poi>5.2.5</version.org.apache.poi>-->
-    <version.org.apache.poi>5.3.0</version.org.apache.poi>
+    <version.maven-surefire>3.5.1</version.maven-surefire>
     <version.org.bouncycastle>1.78.1</version.org.bouncycastle>
-    <!-- https://search.maven.org/search?q=g:org.hibernate.orm -->
-    <!-- https://central.sonatype.com/artifact/org.hibernate.orm/hibernate-platform -->
-    <version.org.hibernate.orm>7.0.0.Beta1</version.org.hibernate.orm>
     <!-- https://search.maven.org/artifact/org.junit/junit-bom -->
-    <version.org.junit>5.11.1</version.org.junit>
-    <version.org.mockito>5.14.0</version.org.mockito>
+    <version.org.junit>5.11.2</version.org.junit>
+    <version.org.mockito>5.14.2</version.org.mockito>
   </properties>
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>com.fasterxml.jackson</groupId>
-        <artifactId>jackson-bom</artifactId>
-        <!-- https://central.sonatype.com/artifact/com.fasterxml.jackson/jackson-bom -->
-        <version>2.18.0</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>com.google.protobuf</groupId>
-        <artifactId>protobuf-java</artifactId>
-        <version>${version.com.google.protobuf}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.protobuf</groupId>
-        <artifactId>protobuf-java-util</artifactId>
-        <version>${version.com.google.protobuf}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.hibernate.orm</groupId>
-        <artifactId>hibernate-platform</artifactId>
-        <version>${version.org.hibernate.orm}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
       <dependency>
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
@@ -126,7 +86,13 @@
     <dependency>
       <groupId>ch.qos.logback</groupId>
       <artifactId>logback-classic</artifactId>
-      <version>1.5.8</version>
+      <version>1.5.11</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>commons-codec</groupId>
+      <artifactId>commons-codec</artifactId>
+      <version>1.17.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -135,16 +101,11 @@
       <version>5.5.13.4</version>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <groupId>nl.jqno.equalsverifier</groupId>
       <artifactId>equalsverifier-nodep</artifactId>
-      <version>3.17</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.poi</groupId>
-      <artifactId>poi-ooxml</artifactId>
-      <version>${version.org.apache.poi}</version>
+      <version>3.17.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -215,7 +176,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.10.0</version>
+          <version>3.10.1</version>
           <configuration>
             <additionalOptions>
               <additionalOption>-Xdoclint:none</additionalOption>
@@ -286,12 +247,6 @@
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
           <version>0.8.12</version>
-        </plugin>
-        <plugin>
-          <groupId>org.sonarsource.scanner.maven</groupId>
-          <artifactId>sonar-maven-plugin</artifactId>
-          <!--version>3.11.0.3922</version-->
-          <version>4.0.0.4121</version>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -483,246 +438,6 @@
   </reporting>
 
   <profiles>
-    <profile>
-      <id>db</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <properties>
-        <kftc-financial-institution-info.sqlite3.path>${project.basedir}/db/kftc-financial-institution-info.sqlite3
-        </kftc-financial-institution-info.sqlite3.path>
-      </properties>
-      <dependencies>
-        <dependency>
-          <groupId>org.hibernate.orm</groupId>
-          <artifactId>hibernate-community-dialects</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>add-test-source</id>
-                <phase>generate-test-sources</phase>
-                <goals>
-                  <goal>add-test-source</goal>
-                </goals>
-                <configuration>
-                  <sources>
-                    <source>${project.basedir}/src/test/java-db</source>
-                  </sources>
-                </configuration>
-              </execution>
-              <execution>
-                <id>add-test-resource-db</id>
-                <phase>generate-test-resources</phase>
-                <goals>
-                  <goal>add-test-resource</goal>
-                </goals>
-                <configuration>
-                  <resources>
-                    <resource>
-                      <directory>src/test/resources-db</directory>
-                      <filtering>true</filtering>
-                    </resource>
-                  </resources>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>json</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-databind</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>add-test-source-json</id>
-                <phase>generate-test-sources</phase>
-                <goals>
-                  <goal>add-test-source</goal>
-                </goals>
-                <configuration>
-                  <sources>
-                    <source>${project.basedir}/src/test/java-json</source>
-                  </sources>
-                </configuration>
-              </execution>
-              <execution>
-                <id>add-test-resource-json</id>
-                <phase>generate-test-resources</phase>
-                <goals>
-                  <goal>add-test-resource</goal>
-                </goals>
-                <configuration>
-                  <resources>
-                    <resource>
-                      <directory>src/test/resources-json</directory>
-                    </resource>
-                  </resources>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>ndjson</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>com.fasterxml.jackson.core</groupId>
-          <artifactId>jackson-databind</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>add-test-source-ndjson</id>
-                <phase>generate-test-sources</phase>
-                <goals>
-                  <goal>add-test-source</goal>
-                </goals>
-                <configuration>
-                  <sources>
-                    <source>${project.basedir}/src/test/java-ndjson</source>
-                  </sources>
-                </configuration>
-              </execution>
-              <execution>
-                <id>add-test-resource-ndjson</id>
-                <phase>generate-test-resources</phase>
-                <goals>
-                  <goal>add-test-resource</goal>
-                </goals>
-                <configuration>
-                  <resources>
-                    <resource>
-                      <directory>src/test/resources-ndjson</directory>
-                    </resource>
-                  </resources>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>proto</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <dependencies>
-        <dependency>
-          <groupId>com.google.protobuf</groupId>
-          <artifactId>protobuf-java</artifactId>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>com.google.protobuf</groupId>
-          <artifactId>protobuf-java-util</artifactId>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>protoc-branch-info</id>
-                <phase>generate-test-sources</phase>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-                <configuration>
-                  <executable>protoc</executable>
-                  <arguments>
-                    <argument>--java_out=src/test/java-proto</argument>
-                    <argument>src/test/resources-proto/KftcFinancialInstitutionBranchInfoProto.proto</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-              <execution>
-                <id>protoc-info</id>
-                <phase>generate-test-sources</phase>
-                <goals>
-                  <goal>exec</goal>
-                </goals>
-                <configuration>
-                  <executable>protoc</executable>
-                  <arguments>
-                    <argument>--java_out=src/test/java-proto</argument>
-                    <argument>src/test/resources-proto/KftcFinancialInstitutionInfoProto.proto</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>add-test-source-proto</id>
-                <phase>generate-test-sources</phase>
-                <goals>
-                  <goal>add-test-source</goal>
-                </goals>
-                <configuration>
-                  <sources>
-                    <source>${project.basedir}/src/test/java-proto</source>
-                  </sources>
-                </configuration>
-              </execution>
-              <execution>
-                <id>add-test-resource-proto</id>
-                <phase>generate-test-resources</phase>
-                <goals>
-                  <goal>add-test-resource</goal>
-                </goals>
-                <configuration>
-                  <resources>
-                    <resource>
-                      <directory>src/test/resources-proto</directory>
-                    </resource>
-                  </resources>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
     <profile>
       <!-- https://www.bouncycastle.org/download/bouncy-castle-java/ -->
       <id>java</id>

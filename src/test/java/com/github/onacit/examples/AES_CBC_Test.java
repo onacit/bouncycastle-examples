@@ -107,7 +107,7 @@ class AES_CBC_Test {
                         cipher,
                         source,
                         target,
-                        ThreadLocalRandom.current().nextInt(1, 128)
+                        in
                 );
             } else {
                 var out = new byte[cipher.getOutputSize(in.length)];
@@ -134,7 +134,7 @@ class AES_CBC_Test {
                         cipher,
                         source,
                         target,
-                        ThreadLocalRandom.current().nextInt(1, 128)
+                        in
                 );
             } else {
                 var out = new byte[cipher.getOutputSize(in.length)];
